@@ -1,47 +1,34 @@
+import Navbar from '@/components/layout/navbar';
+
 export default function HomePage() {
   return (
-    <main className = "min-h-screen bg-black text-white">
-      <section className="max-w-7xl mx-auto px-6 py-20">
-        <div className="space-y-6">
-          <h1 className="text-7x1 front-bold tracking-tight">
-            RankUp 
+    <main className="min-h-screen bg-black text-white">
+      <Navbar />
+
+      <section className="max-w-7xl mx-auto px-6 py-24">
+        <div className="space-y-8">
+          <h1 className="text-7xl font-bold tracking-tight leading-tight">
+            Competitive Programming
+            Analytics Platform
           </h1>
-          <p className="text-xl text-gray-400 text-xl max-w-2xl">
-           [Real-Time Competitive Programming Analytics Platform]
+
+          <p className="text-zinc-400 text-xl max-w-2xl">
+            Track contests, monitor progress,
+            analyze ratings and improve your
+            competitive programming journey.
           </p>
-          </div>
 
-          <div className="grid md:grid-cols-3 gap-6 mt-16">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
-              <h2 className="text-2xl font-semibold">
-                Live Contest
-                </h2>
+          <div className="flex gap-4">
+            <button className="bg-white text-black px-6 py-3 rounded-2xl font-semibold">
+              Get Started
+            </button>
 
-                <p className="mt-4 text-zinc-400">
-                   Track Codeforces, LeetCode, AtCoder and CodeChef contests.
-                </p>
-            </div>
-            
-            <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
-              <h2 className ="text-2xl font-semibold">
-                Smart Analytics
-                </h2>
-                <p className="mt-4 text-zinc-400">
-                  Analyze your solving habits and rating growth.
-                </p>
-            </div>
-            
-            <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
-              <h2 className="text-2xl font-semibold">
-                Real-Time Update
-                </h2>
-                <p className="mt-4 text-zinc-400">
-                  Get real-time updates on your performance and progress.
-                </p>
-            </div>
+            <button className="border border-zinc-700 px-6 py-3 rounded-2xl">
+              Explore
+            </button>
           </div>
+        </div>
       </section>
     </main>
   );
-} 
-
+}

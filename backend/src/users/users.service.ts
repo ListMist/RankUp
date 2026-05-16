@@ -16,6 +16,7 @@ async create(userData: Partial<User>){
 async findByEmail(email: string) {
     return this.userRepository.findOne({ 
         where: { email } ,
+        select: ['id','name','email','password','role'],
     });
 }
 async findById(id: number) {
