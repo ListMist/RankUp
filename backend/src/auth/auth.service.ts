@@ -1,62 +1,57 @@
-import { 
-    Injectable,
-    BadRequestException,
- } from '@nestjs/common';
- import { JwtService } from '@nestjs/jwt';
- import * as bcrypt from 'bcryptjs';
- import { UsersService } from '../users/users.service';
-
-
+import { Injectable, ConflictException, UnauthorizedException } from '@nestjs/common';
+import { UsersService } from '../users/users.service';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-    constructor(
-        private usersService: UsersService,
-        private jwtService : JwtService,
-    ){}
-
-    async register(data: any){
-        const exists =await this.usersService.findByEmail(
-            data.email,
-        );
-        if(exists){
-            throw new BadRequestException('User already exists');
-        }
-        const hashedPassword = await bcrypt.hash(
-            data.password,
-            10,
-        );
-        const user = await this.usersService.Create({
-            ...data,
-            password: hashedPassword,
-        });
-        return user;
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService,
+  ) {}
+  async register(registerDto: RegisterDto) {
+    const existingUser = await this.usersService.findByEmail(registerDto.email);
+    if (existingUser) {
+      throw new ConflictException('This email is already registered.');
     }
-    async login(data:any){
-        const user =await this.usersService.findByEmail(
-            data.email,
-        );
-        if(!user){
-            throw new BadRequestException('Register first');
+    const hashedPassword = await bcrypt.hash(registerDto.password, 10);
 
-        }
-        const matched = await bcrypt.compare(
-            data.password,
-            user.password,
-        );
-        if(!matched){
-            throw new BadRequestException('Incorrect Password');
+    const newUser = await this.usersService.create({
+      ...registerDto,
+      password: hashedPassword,
+    });
 
-        }
-        const token = this.jwtService.sign({
-            id: user.id,
-            email: user.email,
-            role: user.role
-        });
-        return {
-            token,
-            user,
-        };
+    const { password, ...result } = newUser;
+
+    return {
+      message: 'Registration successful',
+      user: result,
+    };
+  }
+
+  async login(loginDto: LoginDto) {
+    const user = await this.usersService.findByEmail(loginDto.email);
+    
+    if (!user) {
+      throw new UnauthorizedException('Invalid email or password combination.');
     }
 
+    const passwordMatches = await bcrypt.compare(loginDto.password, user.password);
+    if (!passwordMatches) {
+      throw new UnauthorizedException('Invalid email or password combination.');
+    }
+
+    const jwtPayload = { email: user.email, sub: user.id, role: user.role };
+    
+    return {
+      token: this.jwtService.sign(jwtPayload),
+      user: {
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    };
+  }
 }

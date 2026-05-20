@@ -1,28 +1,19 @@
-import{Entity,PrimaryGeneratedColumn,Column} from 'typeorm';
-
-export enum  UserRole{
-    PROGRAMMER = 'programmer',
-    COACH='coach',
-}
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class User{
-    @PrimaryGeneratedColumn()
-    id:number;
+export class User {
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-    @Column()
-    name:string;
+  @Column()
+  name!: string;
 
-    @Column({unique: true})
-    email:string;
+  @Column({ unique: true })
+  email!: string;
 
-    @Column()
-    password:string;
+  @Column()
+  password!: string;
 
-    @Column({
-        type: 'enum',
-        enum:UserRole,
-        default: UserRole.PROGRAMMER,
-    })
-    role:UserRole;
+  @Column({ default: 'Coach' })
+  role!: 'Programmer' | 'Coach';
 }
