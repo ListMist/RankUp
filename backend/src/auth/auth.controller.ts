@@ -9,13 +9,29 @@ export class AuthController {
     @Post('register')
     async register(@Body() body:any){
         const register = await this.authService.register(body);
-         return register;
+         return {
+      success: true,
+      message: 'User registered successfully',
+      data: {
+        id: register.id,
+        name: register.name,
+        email: register.email,
+        role: register.role,
+      },
+    };
     }
 
     @Post('login')
     async login(@Body() body: any){
        const login = await this.authService.login(body);
-       return login;
+      return {
+    success: true,
+    message: 'Logged in successfully',
+    data: {
+      token: login.token,
+      user: login.user,
+    },
+  };
     }
 
 
